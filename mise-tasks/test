@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#MISE description="Run plugin tests - install and execute tool"
+set -euo pipefail
+
+mise plugin link --force prometheus .
+mise cache clear
+mise install prometheus@3.5.1
+
+# Capture and display the output while also verifying it
+output=$(mise exec "prometheus@3.5.1" -- "prometheus" --version)
+echo "prometheus output: ${output}"
+
+if echo "${output}" | grep -q '3.5.1'; then
+  echo "✓ Tests passed"
+else
+  echo "✗ Test failed: expected version prometheus@3.5.1"
+  exit 1
+fi
