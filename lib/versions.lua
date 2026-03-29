@@ -1,3 +1,5 @@
+local log = require("log")
+
 function github_tags_url(github_repo)
   local repo_url = "https://api.github.com/repos/" .. github_repo .. "/tags"
   return repo_url
@@ -10,8 +12,11 @@ function list_available_versions(repo_url)
   local github_token = os.getenv("MISE_GITHUB_TOKEN") or os.getenv("GITHUB_API_TOKEN") or os.getenv("GITHUB_TOKEN") or ""
 
   if github_token ~= "" then
+    log.info("Using Github Token to fetch available versions")
+
     local headers = {
-      ["Authorization"] = "Bearer " .. github_token
+      ["Authorization"] = "Bearer " .. github_token,
+      ["X-GitHub-Api-Version"] = "2026-03-10",
     }
   else
     local headers = {}
